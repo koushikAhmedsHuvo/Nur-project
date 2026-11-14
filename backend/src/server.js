@@ -26,17 +26,6 @@ const PORT = process.env.PORT || 5001;
 const server = http.createServer(app);
 initializeSocket(server);
 
-// Ensure DB connection for every request in serverless environment
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    console.error("Database middleware connection error:", err);
-    next(err);
-  }
-});
-
 // ============ CORS ============
 const extraOrigins = (process.env.EXTRA_ALLOWED_ORIGINS || "")
   .split(",")
@@ -78,6 +67,17 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Handle CORS preflight before connecting to MongoDB.
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("Database middleware connection error:", err);
+    next(err);
+  }
+});
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));

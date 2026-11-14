@@ -27,9 +27,18 @@ export const useSocket = () => {
       return;
     }
 
+    const socketUrl =
+      import.meta.env.VITE_SOCKET_URL ||
+      (import.meta.env.DEV ? "http://localhost:5001" : null);
+
+    if (!socketUrl) {
+      console.warn("Socket.IO is not configured for this deployment");
+      return;
+    }
+
     console.log("🔄 Creating new socket connection...");
     
-    socket = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5001", {
+    socket = io(socketUrl, {
       auth: { token },
       withCredentials: true,
       transports: ["websocket", "polling"],
