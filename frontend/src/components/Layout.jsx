@@ -1,6 +1,6 @@
 // frontend/src/components/Layout.jsx
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
+import Sidebar from './SIdeBar';
 import Navbar from './Navbar';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
