@@ -9,12 +9,18 @@ import { isValidObjectId, containsId } from "./lib/validate.js";
 const userSocketMap = new Map(); // userId -> socketId
 
 export const initializeSocket = (server) => {
+  const extraOrigins = (process.env.EXTRA_ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:4173",
     process.env.CLIENT_URL,
     "https://finalprojectfrontend-flax.vercel.app",
     "https://kyauchatbox.vercel.app",
+    ...extraOrigins,
     /https:\/\/.*\.vercel\.app/,
   ].filter(Boolean);
 
@@ -28,8 +34,8 @@ export const initializeSocket = (server) => {
         if (isAllowed) {
           callback(null, true);
         } else {
-          console.log("❌ Socket CORS blocked origin:", origin);
-          callback(null, true);
+          console.warn("❌ Socket CORS blocked origin:", origin);
+          callback(new Error("Origin not allowed"));
         }
       },
       credentials: true,

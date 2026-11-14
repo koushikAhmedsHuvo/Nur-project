@@ -1,10 +1,12 @@
 services:
   - type: web
-    name: chatbox-backend
-    env: node
-    region: singapore # or frankfurt/oregon/ohio
-    buildCommand: npm install
+    name: nur-project-backend
+    runtime: node
+    region: singapore
+    rootDir: backend
+    buildCommand: npm ci
     startCommand: npm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
@@ -14,15 +16,15 @@ services:
         sync: false
       - key: CLIENT_URL
         sync: false
+      - key: STREAM_API_KEY
+        sync: false
+      - key: STREAM_API_SECRET
+        sync: false
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
         sync: false
       - key: CLOUDINARY_API_SECRET
-        sync: false
-      - key: STREAM_API_KEY
-        sync: false
-      - key: STREAM_API_SECRET
         sync: false
       - key: GEMINI_API_KEY
         sync: false
